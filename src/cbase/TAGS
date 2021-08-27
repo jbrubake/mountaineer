@@ -1,0 +1,36 @@
+
+common.c,19
+timestamp 33,1676
+
+common.h,227
+#define COMMON_H26,1636
+#  define BEGIN_C_DECLS 33,1721
+#  define END_C_DECLS 34,1758
+#  define BEGIN_C_DECLS36,1790
+#  define END_C_DECLS37,1814
+typedef int bool;bool40,1844
+#define false 41,1862
+#define true 42,1878
+
+error.c,69
+#define program_name 37,1795
+error_ 40,1846
+error_at_line 70,2532
+
+error.h,121
+#define ERROR_H25,1583
+#define error 29,1627
+unsigned int error_message_count;38,1916
+int error_one_per_line;39,1950
+
+xmalloc.c,56
+xmalloc_ 50,2195
+xrealloc_ 74,2817
+xcalloc_ 103,3512
+
+xmalloc.h,156
+#define XMALLOC_H41,2301
+#define xcalloc(xcalloc51,2483
+#define xmalloc(xmalloc53,2618
+#define xrealloc(xrealloc55,2754
+#define xfree(xfree57,2896
