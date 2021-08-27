@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------\
-| linked_list.c                                                            |
+| log_data.c                                                               |
 |                                                                          |
 | This file is part of mountaineer                                         |
 |                                                                          |
@@ -17,49 +17,32 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc ., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA |
 |---------------------------------------------------------------------------
-| linked_list.c Documentation
+| log_data.c Documentation
 |
 \-------------------------------------------------------------------------*/
 
+#include <stdio.h>
+#include <string.h>
+
 #include "cbase/xmalloc.h"
+#include "cbase/error.h"
+#include "cbase/common.h"
 #include "server.h"
 
 int
-new_client (struct SERVER *server)
+log_data (struct CLIENT *client)
 {
-  /* Allocate the new client */
-  struct CLIENT *client;
-  client = xmalloc (struct CLIENT, 1);
-
-  /* Set up pointers */
-  client->prev = server->tail;
-  client->next = NULL;
-
-  if (server->tail == NULL)
-    server->head = server->tail = client;
-  else
-    server->tail->next   = client;
-
-  return (0);
-}
-
-int
-remove_client (struct CLIENT *head, struct CLIENT *client)
-{
-  struct CLIENT *curr;
-  for (curr = head; curr != NULL; curr = curr->next)
+  /* Print the data */
+  char *token = strtok (client->read_buf
+                        + PACKET_TYPE + 1, "%");
+  while (token != NULL)
     {
-      /* Found the one we want to delete */
-      if (curr == client)
-        {
-          /* Take it out of the list */
-          curr->prev->next = curr->next;
-          curr->next->prev = curr->prev;
-          /* Free it */
-          xfree (curr);
-        }
+      fprintf (client->output, "%s\n", token);
+      token = strtok (NULL, "%");
     }
 
+  /* Flush the data */
+  fflush (client->output);
+
   return (0);
 }
-

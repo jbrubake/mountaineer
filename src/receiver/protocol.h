@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------------\
-| server.h                                                                 |
+| protocol.h                                                               |
 |                                                                          |
-| This file is part of libselserv                                          |
+| This file is part of mountaineer                                         |
 |                                                                          |
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -17,7 +17,7 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA  |
 |---------------------------------------------------------------------------
-| server.h Documentation
+| protocol.h Documentation
 |
 \-------------------------------------------------------------------------*/
 
@@ -28,44 +28,39 @@
   Packet Format
   -------------
 
-  All packets will be 1025 bytes. This allows for a 1B type field
-  followed by 1024B of data. If the data does not fill 1024B, then it
-  will be NUL padded.
+  Packets can be up to 1024 bytes long. The first byte is a type field.
 
   The first packet sent should be a Stream Info packet. This packet
-  will contain information on the byte sizes of the DTG and corresponding
-  data point. It will also contain an info string that will contain
-  text information about the data stream.
+  the name of the data stream.
 
   All following packets will be Data packets. Their data segment will contain
-  DTG/data point pairs not to exceed 1024B. On machines where sizeof(time_t) =
-  sizeof(float) = 4, this will allow for 128 DTG/data pairs per packet.
+  data/timestamp point pairs not to exceed 1024B. Each sample is separated
+  by a '%' character. The data and timestamp will be separated by a
+  ':' character.
 
   Stream Info Packet Format
   -------------------------
 
-  +----+----------------+---------------+-------------+
-  | 00 | sizeof(time_t) | sizeof(float) | info string |
-  +----+----------------+---------------+-------------+
-   0    1                2               3-1024
+  +----+--------------------...
+  | 00 | Stream name string
+  +----+--------------------...
+   0    1-1024
 
-  Info string contains the following \0 delimited fields:
+  Info string contains the following delimited fields:
   Data stream name
 
   Data Packet Format
   ------------------
 
-  a = sizeof(time_t) on sending machine
-  b = sizeof(float) on sending machine
 
-  +----+-----+------------+-----+------------+-------
-  | 01 | DTG | Data point | DTG | Data point |  ...
-  +----+-----+------------+-----+------------+-------
-   0    1     1+a          1+a+b 1+2a+b       1+2a+2b
+  +----+------------+---+-----------+---+------------+---+----------...
+  | 01 | Data point | : | Timestamp | % | Data point | : |Timestamp
+  +----+------------+---+-----------+---+------------+---+----------...
+   0    1
 */
 
 /* Packet size */
-#define PACKET_SIZE 20
+#define PACKET_SIZE 1024
 
 /* Packet types */
 #define STREAM_INFO_PACKET '0'

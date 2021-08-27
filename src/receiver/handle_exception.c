@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------------\
-| run_server.c                                                            |
+| handle_exception.c                                                       |
 |                                                                          |
-| This file is part of libselserv                                          |
+| This file is part of mountaineer                                         |
 |                                                                          |
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -17,9 +17,11 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc ., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA |
 |---------------------------------------------------------------------------
-| run_server.c Documentation
+| handle_exception.c Documentation
 |
 \-------------------------------------------------------------------------*/
+
+#include <stdlib.h>
 
 #include "server.h"
 #include "cbase/error.h"
@@ -27,5 +29,6 @@
 int
 handle_exception (struct CLIENT *client)
 {
+  exit (1);
   return (0);
 }

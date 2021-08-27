@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------------\
-| run_server.c                                                            |
+| accept_connection.c                                                      |
 |                                                                          |
-| This file is part of libselserv                                          |
+| This file is part of mountaineer                                         |
 |                                                                          |
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -17,7 +17,7 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc ., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA |
 |---------------------------------------------------------------------------
-| run_server.c Documentation
+| accept_connection.c Documentation
 |
 \-------------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ accept_connection (struct SERVER *server)
     server->fdmax = new_connection;
 
   /* Log the connection */
-  error (0, 0, "Accepted new connection form %s",
+  error (0, 0, "Accepted new connection from %s",
          inet_ntoa (remote_interface.sin_addr));
 
   /* Add a new connection to the connection list */
@@ -61,7 +61,6 @@ accept_connection (struct SERVER *server)
   server->tail->sd = new_connection;
   server->tail->read_buf[0] = '\0';
   server->tail->bytes_held = 0;
-  server->tail->have_packet = false;
 
   return (0);
 }

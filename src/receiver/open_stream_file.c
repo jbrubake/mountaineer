@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------\
-| linked_list.c                                                            |
+| open_stream_file.c                                                       |
 |                                                                          |
 | This file is part of mountaineer                                         |
 |                                                                          |
@@ -17,49 +17,35 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc ., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA |
 |---------------------------------------------------------------------------
-| linked_list.c Documentation
+| open_stream_file.c Documentation
 |
 \-------------------------------------------------------------------------*/
 
+#include <stdio.h>
+#include <string.h>
+
 #include "cbase/xmalloc.h"
+#include "cbase/error.h"
+#include "cbase/common.h"
 #include "server.h"
 
 int
-new_client (struct SERVER *server)
+open_stream_file (struct CLIENT *client)
 {
-  /* Allocate the new client */
-  struct CLIENT *client;
-  client = xmalloc (struct CLIENT, 1);
+  /* Set the stream name */
+  client->name = xmalloc (char, strlen (client->read_buf
+                                        + PACKET_TYPE + 1));
+  strcpy (client->name, client->read_buf + PACKET_TYPE + 1);
 
-  /* Set up pointers */
-  client->prev = server->tail;
-  client->next = NULL;
+  /* Open the stream data file */
+  client->output = fopen (client->name, "a");
 
-  if (server->tail == NULL)
-    server->head = server->tail = client;
-  else
-    server->tail->next   = client;
+  /* Print a header */
+  fprintf (client->output, "%s : Started at %s\n\n", client->name,
+           timestamp ("%d%H%M%B%Y"));
+
+  /* Flush the data */
+  fflush (client->output);
 
   return (0);
 }
-
-int
-remove_client (struct CLIENT *head, struct CLIENT *client)
-{
-  struct CLIENT *curr;
-  for (curr = head; curr != NULL; curr = curr->next)
-    {
-      /* Found the one we want to delete */
-      if (curr == client)
-        {
-          /* Take it out of the list */
-          curr->prev->next = curr->next;
-          curr->next->prev = curr->prev;
-          /* Free it */
-          xfree (curr);
-        }
-    }
-
-  return (0);
-}
-

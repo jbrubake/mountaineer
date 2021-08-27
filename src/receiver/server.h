@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------------\
 | server.h                                                                 |
 |                                                                          |
-| This file is part of libselserv                                          |
+| This file is part of mountaineer                                         |
 |                                                                          |
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -27,6 +27,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <stdio.h>
+
 #include <cbase/error.h>
 #include <cbase/common.h>
 #include <protocol.h>
@@ -40,14 +42,12 @@ struct CLIENT
   struct sockaddr_in interface;
 
   char read_buf[PACKET_SIZE + 1];
-  char tmp_buf[PACKET_SIZE * 2];
 
   int bytes_held;
-  bool have_packet;
 
-  char *desc;
   char *name;
-  char *sample_rate;
+
+  FILE *output;
 
   struct CLIENT *next;
   struct CLIENT *prev;

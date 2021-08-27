@@ -1,14 +1,14 @@
 /*-------------------------------------------------------------------------\
-| run_server.c                                                            |
+| process_data.c                                                           |
 |                                                                          |
-| This file is part of libselserv                                          |
+| This file is part of mountaineer                                         |
 |                                                                          |
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -17,7 +17,7 @@
 | along with libselserv; if not, write to the Free Software                |
 | Foundation, Inc ., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA |
 |---------------------------------------------------------------------------
-| run_server.c Documentation
+| process_data.c Documentation
 |
 \-------------------------------------------------------------------------*/
 
@@ -31,33 +31,22 @@
 int
 process_data (struct CLIENT *client)
 {
-  char *tmp;
-
   switch (client->read_buf[PACKET_TYPE])
     {
     case STREAM_INFO_PACKET:
-
-      tmp = strtok (client->read_buf, ":");
-      client->desc = xmalloc (char, strlen (tmp));
-      strcpy (client->desc, tmp);
-
-      tmp = strtok (NULL, ":");
-      client->name = xmalloc (char, strlen (tmp));
-      strcpy (client->name, tmp);
-
-      tmp = strtok (NULL, ":");
-      client->sample_rate = xmalloc (char, strlen(tmp));
-      strcpy (client->sample_rate, tmp);
-
+      if (open_stream_file (client) == -1)
+        error_at_line (1, errno, __FILE__, __LINE__,
+                       "%s", "open_stream_file()");
       break;
 
     case DATA_PACKET:
-
+      log_data (client);
       break;
     }
 
-  /* We no longer have a full packet */
-  client->have_packet = false;
+  // Zero the buffer
+  strcpy (client->read_buf, "");
+  client->bytes_held = 0;
 
   return (0);
 }

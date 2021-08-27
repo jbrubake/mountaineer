@@ -1,17 +1,16 @@
 /*=========================================================================\
-| libselserv - 0.1.0a                                                      |
+| mountaineer - 0.1.0a                                                     |
 |                                                                          |
 | Copyright 2003                                                           |
-|     Jeremy Brubaker (jeremy.brubaker@us.army.mil)                        |
-|     ...                                                                  |
+|     Jeremy Brubaker (jdb291@psu.edu)                                     |
 |                                                                          |
 |--------------------------------------------------------------------------|
-| libselserv is free software; you can redistribute it and/or modify       |
+| mountaineer is free software; you can redistribute it and/or modify      |
 | it under the terms of the GNU General Public License as published by     |
 | the Free Software Foundation; either version 2 of the License, or        |
 | (at your option) any later version.                                      |
 |                                                                          |
-| libselserv is distributed in the hope that it will be usedful,           |
+| mountaineer is distributed in the hope that it will be useful,           |
 | but WITHOUT ANY WARRANTY; without even the implied warranty of           |
 | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the             |
 | GNU General Public License for more details.                             |
@@ -23,7 +22,7 @@
 | DESCRIPTION                                                              |
 | ...                                                                      |
 |==========================================================================/
-| Using libselserv
+| Using mountaineer
 |
 \=========================================================================*/
 
@@ -35,7 +34,7 @@ main (int argc, char **argv)
 {
   struct SERVER *server;
   int retval;
-  server = init_server ("127.0.0.1", 4000);
+  server = init_server (argv[1], 4000);
   retval = run_server (server);
   xfree (server);
 
